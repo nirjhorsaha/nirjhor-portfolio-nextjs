@@ -3,7 +3,7 @@ import { FiGithub, FiLinkedin, FiTwitter, FiInstagram, FiFacebook } from 'react-
 
 import { SocialTypes } from './types'
 
-// social media data
+// sSocial profile data
 export const socialData : SocialTypes[] = [
     { icon : FiGithub, url : "https://github.com/nirjhorsaha" },
     { icon : FiLinkedin, url : "https://www.linkedin.com/in/nirjhorsaha/" },
