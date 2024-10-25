@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { motion } from 'framer-motion';
 
 import Button from "@/src/components/Button";
 
@@ -7,23 +8,52 @@ const GetInTouch = () => {
     "Thank you for taking the time to explore my portfolio! If you have any questions, want to collaborate, or just want to say hello, I'd be happy to hear from you.";
 
   return (
-    <section className="text-center my-4" id="contact">
-      <h1 className="flex items-center gap-2 text-md justify-center font-normal text-sky-400">
-        <span className=" font-mono">04. </span>
+    <motion.section
+      animate={{ opacity: 1, y: 0 }} 
+      className="text-center mt-4"
+      id="contact"
+      initial={{ opacity: 0, y: 20 }} 
+      transition={{ duration: 0.5 }}
+    >
+      <motion.h1
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center gap-2 text-md justify-center font-normal text-sky-400"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, delay: 0.2 }} 
+      >
+        <span className="font-mono">04. </span>
         What next?
-      </h1>
+      </motion.h1>
 
-      <h1 className="font-medium text-slate-300 text-4xl text-center mt-5">
-        {" "}
-        Get In Touch{" "}
-      </h1>
+      <motion.h1
+        animate={{ opacity: 1, y: 0 }}
+        className="font-medium text-slate-300 text-4xl text-center mt-5"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, delay: 0.4 }} 
+      >
+        Get In Touch
+      </motion.h1>
 
-      <p className="text-slate-400 max-w-2xl mx-auto my-3">
+      <motion.p
+        animate={{ opacity: 1, y: 0 }}
+        className="text-slate-400 max-w-2xl mx-auto my-3"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, delay: 0.6 }} 
+      >
         {content}
-      </p>
+      </motion.p>
 
-      <Button label="Say Hello 👋" />
-    </section>
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, delay: 0.8 }} 
+      >
+        <Button 
+          label="Say Hello 👋" 
+         // Smooth transition for hover effect
+        />
+      </motion.div>
+    </motion.section>
   );
 };
 
