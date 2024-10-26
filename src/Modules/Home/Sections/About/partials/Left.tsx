@@ -1,32 +1,57 @@
 /* eslint-disable prettier/prettier */
-import { motion } from 'framer-motion'
-import { IoMdArrowDropright } from 'react-icons/io'
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
-import {  } from "react-icons/io";
-import { fadeTop, motionStep } from '@/src/config/motion';
-import { aboutContent, skills } from '@/src/config/constants';
-
+import { aboutContent } from '@/src/config/constants';
 
 const Left = () => {
+  const [isVisible, setIsVisible] = useState(false); // State to control visibility
+  const sectionRef = useRef<HTMLDivElement | null>(null); // Ref for the section
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // Check if the entry is intersecting
+        if (entry.isIntersecting) {
+          setIsVisible(true); // Set visibility to true when in view
+        } else {
+          setIsVisible(false); // Set visibility to false when out of view
+        }
+      });
+    }, {
+      threshold: 0.1, // Trigger when 10% of the section is visible
+    });
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current); // Start observing the section
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current); // Clean up observer
+      }
+    };
+  }, []);
+
   return (
-    <motion.div variants={fadeTop} {...motionStep} className='col-span-3' >
-      
-      <div className='space-y-4 mt-7 text-slate-400 text-justify' >
-
-        {aboutContent.map((e:string, i:number) => <p key={i} > {e} </p>)}
-
-        <div className='__skills md:pr-56' >
-           <ul className='grid grid-cols-2 space-y-2' >
-              {skills.map((e: string, i: number) => (
-                <li key={i} className='gap-1 flex items-center transition-all duration-300 hover:translate-x-[7px] select-none hover:text-sky-400' > <IoMdArrowDropright className='text-sky-400 text-xl' /> {e}</li> 
-              ))}             
-           </ul> 
-        </div>
-
+    <div className='md:col-span-2 lg:col-span-3'>
+      <div ref={sectionRef} className='space-y-4 dark:text-slate-400'>
+        {/* Animated About Content with scroll animation */}
+        {aboutContent.map((e: string, i: number) => (
+          <motion.p
+            key={i}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
+            className='leading-relaxed text-base text-wrap  tracking-widest md:text-justify md:tracking-wider
+            lg:text-justify lg:tracking-tighter'
+            initial={{ opacity: 0, y: 20 }} // Initial state for the animation
+            transition={{ duration: 0.7, delay: i * 0.2 }}
+          >
+            {e}
+          </motion.p>
+        ))}
       </div>
+    </div>
+  );
+};
 
-    </motion.div>
-  )
-}
-
-export default Left
+export default Left;

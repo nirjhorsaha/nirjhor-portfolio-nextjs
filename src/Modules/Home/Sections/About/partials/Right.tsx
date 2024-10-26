@@ -4,12 +4,15 @@ import { motion } from 'framer-motion'
 import React from 'react'
 import Image from 'next/image'
 
-import { fadeLeft, motionStep } from '@/src/config/motion'
 
 const Right = () => {
   return (
-    <motion.div variants={fadeLeft} {...motionStep} className='cols-span-2 lg:block hidden' >
-      <div className='w-[300px] h-[350px] relative group rounded-xl after:transition-all after:duration-200 after:hover:left-[12px] after:hover:top-[12px] after:w-full after:z-30 after:h-full after:border-[2px] after:absolute after:top-[20px] after:left-[20px] after:rounded-xl after:border-sky-500' >
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className='md:cols-span-2 lg:block mt-4 md:mt-0 '
+      initial={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.5, type: 'spring', stiffness: 300 }} >
+      <div className='md:w-[300px] h-[350px] relative group rounded-xl after:transition-all after:duration-200 after:hover:left-[12px] after:hover:top-[12px] after:w-full after:z-30 after:h-full after:border-[2px] after:absolute after:top-[20px] after:left-[20px] after:rounded-xl after:border-sky-500' >
         <Image
           alt='loading...'
           blurDataURL="/images/model/Nirjhor Saha Image.jpg"

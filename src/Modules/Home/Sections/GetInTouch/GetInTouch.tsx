@@ -10,7 +10,7 @@ const GetInTouch = () => {
   return (
     <motion.section
       animate={{ opacity: 1, y: 0 }} 
-      className="text-center mt-4"
+      className="container text-center"
       id="contact"
       initial={{ opacity: 0, y: 20 }} 
       transition={{ duration: 0.5 }}
@@ -47,6 +47,7 @@ const GetInTouch = () => {
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5, delay: 0.8 }} 
+        className='text-center flex justify-center items-center'
       >
         <Button 
           label="Say Hello 👋" 

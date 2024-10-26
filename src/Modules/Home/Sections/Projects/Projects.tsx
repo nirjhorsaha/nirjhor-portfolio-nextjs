@@ -1,111 +1,128 @@
 /* eslint-disable prettier/prettier */
-"use client"
-
-// import Featured from "@components/cards/Project/Featured";
-// import ProjectCard from "@components/cards/Project/ProjectCard";
+"use client";
 
 import { Link } from "@nextui-org/link";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { PiGitBranchDuotone } from "react-icons/pi";
 
 import { projects } from "@/src/config/constants";
-import { fadeLeft, fadeTop, fadeUpSpring, motionStep } from "@/src/config/motion";
 import Featured from "@/src/components/cards/Project/Featured";
 import { ProjectTypes } from "@/src/config/types";
 import Button from "@/src/components/Button";
 import { siteConfig } from "@/src/config/site";
 
-
-
 const Projects = () => {
-  return (
-    <div className="container" id="projects">
-      <motion.h1
-        variants={fadeLeft}
-        {...motionStep}
-        className="flex items-center gap-2 text-lg md:text-3xl font-medium text-slate-300 mb-12"
-      >
-        <span className="text-sky-400 font-mono">03. </span>
-        Some Things I’ve Built
-      </motion.h1>
+  const [visible, setVisible] = useState<boolean[]>(
+    new Array(projects.length).fill(false),
+  ); // Initialize with false
+  const [buttonVisible, setButtonVisible] = useState<boolean>(false);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLDivElement | null>(null);
 
-      <div className="space-y-20">
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = (entry.target as HTMLElement).dataset.index;
+
+          if (index) {
+            const idx = parseInt(index);
+
+            setVisible((prev) => {
+              const newVisible = [...prev];
+
+              newVisible[idx] = entry.isIntersecting; // Set visibility based on intersection
+
+              return newVisible;
+            });
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+      },
+    );
+
+    const items =
+      sectionRef.current?.querySelectorAll<HTMLElement>(".project-card");
+
+    items?.forEach((item, index) => {
+      const htmlElement = item as HTMLElement;
+
+      htmlElement.dataset.index = index.toString();
+      observer.observe(htmlElement);
+    });
+
+    return () => {
+      items?.forEach((item) => observer.unobserve(item));
+    };
+  }, []);
+
+  // Button observer
+  useEffect(() => {
+    const buttonObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setButtonVisible(entry.isIntersecting); // Show/hide button based on intersection
+        });
+      },
+      {
+        threshold: 0.5,
+      },
+    );
+
+    if (buttonRef.current) {
+      buttonObserver.observe(buttonRef.current);
+    }
+
+    return () => {
+      if (buttonRef.current) {
+        buttonObserver.unobserve(buttonRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="container" id="projects">
+      <p className="text-4xl md:text-5xl font-medium font-display text-black dark:text-sky-400 md:leading-[5rem]">
+        Some Things I’ve Built
+      </p>
+      <p className="text-base mt-2">
+        Take a Look at My Latest Work, Illustrating My Skills in Web Development
+        and My Approach to Problem-Solving
+      </p>
+
+      <div className="space-y-20 mt-10">
         {projects
-          .filter((e: ProjectTypes) => e.featured == true)
+          .filter((e: ProjectTypes) => e.featured === true)
           .map((e: ProjectTypes, i: number) => (
-            <motion.div key={i} variants={fadeTop} {...motionStep}>
+            <div
+              key={i}
+              className={`project-card transition-opacity duration-700 transform ${
+                visible[i]
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
+              }`}
+            >
               <Featured {...e} secondary={i % 2 === 0 ? false : true} />
-            </motion.div>
+            </div>
           ))}
       </div>
-      <motion.div
-        animate="visible"
-        className="flex justify-center mt-10"
-        initial="hidden"
-        variants={fadeUpSpring}
+
+      <div
+        ref={buttonRef}
+        className={`flex justify-center mt-10 transition-opacity duration-700 transform ${
+          buttonVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
       >
-        <Link
-          href={siteConfig.links.github}
-          rel="noreferrer"
-          target="_blank"
-        >
+        <Link href={siteConfig.links.github} rel="noreferrer" target="_blank">
           <Button icon={<PiGitBranchDuotone />} label="View More Projects" />
         </Link>
-      </motion.div>
-    </div>
-
+      </div>
+    </section>
   );
 };
 
 export default Projects;
-
-
-
-
-{/* <div className="flex flex-col xl:flex-row xl:gap-[30px]">
-<div className="w-full xl:w-[50%] xl:h-[460px] flex flex-col xl:justify-between order-2 xl:order-none">
-  <div className="text-8xl leading-none font-extrabold text-outline">
-    {project.num}
-  </div>
-  <h2 className="text-[42px] font-bold leading-none text-white group-hover:text-accent transation-all duration-500 capitalize">{project.title}</h2>
-  <h2 className="text-white/60">{project.description}</h2>
-  {
-    <ul className="flex gap-2">
-      {project.tech.map((item, index) => {
-        return (
-          <li key={index} className="text-xl">{item}
-
-            {index !== project.tech.length - 1 && ","} {/* remove last comma */}
-//       </li>
-//     )
-//   })
-//   }
-// </ul>
-//   }
-//   <div>
-//     <div className='flex justify-start mt-5 gap-3 text-slate-300' >
-//       {project.live && <Link className='hover:text-sky-400 transition-all duration-300 hover:scale-110 text-2xl' href={`${project.live}`} target='_blank' >
-//         <HiOutlineExternalLink />
-//       </Link>}
-
-//       {project.code && <Link className='hover:text-sky-400 transition-all duration-300 hover:scale-90 text-[1.2rem]' href={`${project.code}`} target='_blank' >
-//         <FiGithub />
-//       </Link>}
-//     </div>
-//   </div>
-
-// </div>
-
-{/* <div className="w-full xl:w-[50%]">
-  <div className=" relative w-full h-full">
-    <Image
-      alt='loading...'
-      className='transition-all duration-300 group-hover:scale-110 '
-      layout='fill'
-      objectFit='cover'
-      quality={100}
-      src={`/images/projects/${project.thumnail}`}
-    />
-  </div>
-</div>
-</div> */} 
